@@ -4,6 +4,8 @@ import { initiateGitHubLogin, handleCallback } from './github-auth.js';
 const RECIPE_LIST_ID = 'view-recipes';
 const SINGLE_RECIPE_ID = 'single-recipe';
 
+const MAX_PAGES = 10;
+
 // ==================== INIT ====================
 const init = async () => {
     addEventListenersBob();
@@ -25,15 +27,6 @@ document.addEventListener('DOMContentLoaded', init);
 const addEventListenersBob = () => {
     document.getElementById('add-recipe-btn').addEventListener('click', function () {
         document.getElementById('add-recipe-popup').style.display = 'flex';
-    });
-
-    document.getElementById('close-popup-btn').addEventListener('click', function () {
-        document.getElementById('add-recipe-popup').style.display = 'none';
-    });
-
-    document.getElementById('filter-btn').addEventListener('click', function () {
-        const filterMenu = document.getElementById('filter-menu');
-        filterMenu.style.display = filterMenu.style.display === 'block' ? 'none' : 'block';
     });
 
     document.getElementById('search-btn').addEventListener('click', function () {
@@ -91,28 +84,42 @@ const loadMainPage = async () => {
     data.push(...res.data);
 
     let pageCnt = 2;
-    // while (hasNext == true) {
-    //     const next = await fetchFromApi(`api/recipes?currentPage=${pageCnt++}`, {});
-    //     data.push(...next.data);
-    //     hasNext = next.hasNext;
-    // }
+    while (hasNext == true && pageCnt < MAX_PAGES - 1) {
+        const next = await fetchFromApi(`api/recipes?currentPage=${pageCnt++}`, {});
+        data.push(...next.data);
+        hasNext = next.hasNext;
+    }
 
     data.forEach((el) => buildRecipeCard(RECIPE_LIST_ID, el.RecipeName, el.MealType, el._id));
 }
 
-const buildRecipeCard = (recListId, name, description, recipeId) => {
+const buildRecipeCard = async (recListId, name, description, recipeId) => {
     const recipeCard = document.createElement('section');
     recipeCard.className = "recipe-card";
     recipeCard.id = recipeId;
 
+    // const iconUrl = await fetchFromApi(`api/recipes/icon?q=${name}`, {});
+    const iconUrl = 'https://media.gettyimages.com/id/1141797008/vector/table-knife-and-fork-vector.jpg?s=612x612&w=0&k=20&c=ZMscIoKfUiQevWFrxxwnhwZ-MvElVU8XFvmzSfZzolk=';
+
+    recipeCard.style.backgroundImage = `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3)), url(${iconUrl})`;
+    recipeCard.style.backgroundSize = 'cover';
+    recipeCard.style.backgroundPosition = 'center';
+
+    const textContainer = document.createElement('div');
+    textContainer.className = 'recipe-card-text';
+
     const recipeName = document.createElement('h3');
+    recipeName.className = 'recipe-name-text';
     recipeName.textContent = name;
 
     const recipeDescription = document.createElement('p');
+    recipeDescription.className = 'recipe-desc-text';
     recipeDescription.textContent = description;
 
-    recipeCard.appendChild(recipeName);
-    recipeCard.appendChild(recipeDescription);
+    textContainer.appendChild(recipeName);
+    textContainer.appendChild(recipeDescription);
+
+    recipeCard.appendChild(textContainer);
 
     document.getElementById(recListId).appendChild(recipeCard);
 
@@ -138,7 +145,7 @@ const loadSingleRecipe = async (recipeId) => {
     renderRecipe(recipe);
 }
 
-function renderRecipe(recipe) {
+async function renderRecipe(recipe) {
     const recipeContainer = document.getElementById(SINGLE_RECIPE_ID);
 
     const title = document.createElement('h1');
@@ -149,14 +156,26 @@ function renderRecipe(recipe) {
     author.innerHTML = `<strong>Author:</strong> ${recipe.AuthorName}`;
     recipeContainer.appendChild(author);
 
-    const mealType = document.createElement('p');
-    mealType.innerHTML = `<strong>Meal Type:</strong> ${recipe.MealType}`;
-    recipeContainer.appendChild(mealType);
+    const videoContainer = document.createElement('div');
+    videoContainer.className = 'video-container';
+
+    const videoEmbedLink = (await fetchFromApi(`api/recipes/video?q=${recipe.RecipeName} recipe`, {})).videoUrl;
+
+    const iframe = document.createElement('iframe');
+    iframe.src = videoEmbedLink;
+    iframe.width = '400';
+    iframe.height = '220';
+    iframe.frameBorder = '0';
+    iframe.allowFullscreen = true;
+
+    videoContainer.appendChild(iframe);
+    recipeContainer.appendChild(videoContainer);
 
     const details = document.createElement('div');
     details.className = 'details';
     details.innerHTML = `
         <h2>Details</h2>
+        <strong>Meal Type:</strong> ${recipe.MealType}
         <p><strong>Serving Size:</strong> ${recipe.ServingSize}</p>
         <p><strong>Preparation Time:</strong> ${recipe.PrepTimeMin} - ${recipe.PrepTimeMax} minutes</p>
         <p><strong>Categories:</strong> ${recipe.Categories.join(', ')}</p>
