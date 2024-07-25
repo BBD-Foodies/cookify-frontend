@@ -4,18 +4,18 @@ import { initiateGitHubLogin, handleCallback } from './github-auth.js';
 const RECIPE_LIST_ID = 'view-recipes';
 const SINGLE_RECIPE_ID = 'single-recipe';
 
-const MAX_PAGES = 10;
+const MAX_PAGES = 1;
 
 // ==================== INIT ====================
 const init = async () => {
-    addEventListenersBob();
+    if (window.location.pathname === '/login') {
+        handleCallback();
+    }
+
     await checkAuthStatus();
 
-    if (window.location.pathname === '/callback') {
-        handleCallback();
-    } else {
-        await loadMainPage();
-    }
+    addEventListenersBob();
+    await loadMainPage();
 }
 
 document.addEventListener('DOMContentLoaded', init);
@@ -36,38 +36,28 @@ const addEventListenersBob = () => {
 
 async function checkAuthStatus() {
     const accessToken = sessionStorage.getItem('accessToken');
-    const authSection = document.getElementById('auth-section');
 
     if (accessToken) {
         try {
-            const response = await fetch('/api/auth/validate', {
+            const url = `https://api.cookify.projects.bbdgrad.com/api/auth/validate`;
+            const response = await fetch(url, {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
                 }
             });
             if (response.ok) {
                 const userData = await response.json();
-                authSection.innerHTML = `
-                    <span>Welcome, ${userData.name}</span>
-                    <button id="logout-btn">Logout</button>
-                `;
-                document.getElementById('logout-btn').addEventListener('click', logout);
+                console.log(userData);
             } else {
                 throw new Error('Invalid token');
             }
         } catch (error) {
             console.error('Auth error:', error);
-            showLoginButton();
+            initiateGitHubLogin();
         }
     } else {
-        showLoginButton();
+        initiateGitHubLogin();
     }
-}
-
-function showLoginButton() {
-    const authSection = document.getElementById('auth-section');
-    authSection.innerHTML = '<button id="github-login-btn">Login with GitHub</button>';
-    document.getElementById('github-login-btn').addEventListener('click', initiateGitHubLogin);
 }
 
 function logout() {

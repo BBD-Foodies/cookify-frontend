@@ -1,33 +1,24 @@
-const CLIENT_ID = 'Ov23li6A1ROcDeq1lkxJ';
-const REDIRECT_URI = 'http://localhost:5000/api/auth/callback';
+import { REDIRECT_URI, CLIENT_ID } from "./config.js";
 
 export function initiateGitHubLogin() {
     const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=user`;
     window.location.href = githubAuthUrl;
 }
 
-export function handleCallback() {
+export async function handleCallback() {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
+    console.log(code);
 
     if (code) {
-        fetch('/api/auth/login', {
-            method: '`GET`',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ code }),
-        })
-        .then(response => response.json())
-        .then(console.log(JSON.stringify(repsonse)))
-        .then(data => {
-            if (data.accessToken) {
-                sessionStorage.setItem('accessToken', data.accessToken);
-                window.location.href = '/';
-                console.log("worked")
-            }
-        })
-        .catch(error => console.error('Error:', error));
-        console.log("done");
+        const url = `https://api.cookify.projects.bbdgrad.com/api/auth/login?code=${code}`;
+        const tokenRes = await fetch(url);
+        console.log(tokenRes);
+        const token = (await tokenRes.json()).accessToken;
+
+        if (token) {
+            sessionStorage.setItem('accessToken', token);
+            window.location.href = '/';
+        }
     }
 }
