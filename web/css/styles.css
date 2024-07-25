@@ -206,31 +206,20 @@ textarea {
   justify-content: end;
 }
 
-.recipe {
-  max-width: 600px;
-  margin: 0 auto;
-  border: 1px solid #ddd;
-  padding: 20px;
-  border-radius: 5px;
+#single-recipe {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  /* border: 0.12em solid rgba(107, 107, 107, 0.6);
+  border-radius: 0.5rem;
+  box-shadow: 0.1em 0.1em 2em 0.1em rgb(173, 173, 173); */
+  gap: 1rem;
 }
-.recipe h1 {
-  text-align: center;
-  font-size: 2em;
-  margin-bottom: 10px;
-}
-.recipe h2 {
-  font-size: 1.5em;
-  margin-top: 20px;
-}
-.ingredients,
-.steps,
-.details {
-  margin-bottom: 20px;
-}
-.ingredients ul,
-.steps ol {
-  padding-left: 20px;
-}
-.details p {
-  margin: 5px 0;
+
+#single-recipe h1 {
+  font-size: 2rem;
 }
