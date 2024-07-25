@@ -1,56 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cookify</title>
-    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/styles.css" />
     <script type="module" src="./js/index.js" defer></script>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <h1>Cookify</h1>
+      <h1>Cookify</h1>
     </header>
     <nav>
-        <section>
-            <input type="text" placeholder="Search recipes">
-            <button id="search-btn">Search</button>
-        </section>
-        <section id="filter-add">
-            <button id="filter-btn">Filter</button>
-            <button id="add-recipe-btn">Add Recipe</button>
-        </section>
+      <section>
+        <input type="text" placeholder="Search recipes" />
+        <button id="search-btn">Search</button>
+      </section>
+      <section id="filter-add">
+        <button id="filter-btn">Filter</button>
+        <button id="add-recipe-btn">Add Recipe</button>
+      </section>
     </nav>
     <section id="contentContainer">
-        <section id="view-recipes" class="recipe-list">
-        </section>
-    </section>
+      <section id="view-recipes" class="recipe-list"></section>
+      <section id="single-recipe" style="display: none"></section>
 
-    <div class="popup" id="add-recipe-popup">
+      <div class="popup" id="add-recipe-popup">
         <div class="popup-content">
-            <button class="close-btn" id="close-popup-btn">X</button>
-            <h2>Add Recipe</h2>
-            <form>
-                <input type="text" placeholder="Recipe name" required>
-                <input type="text" placeholder="Description" required>
-                <textarea placeholder="Ingredients" required></textarea>
-                <textarea placeholder="Instructions" required></textarea>
-                <button type="submit">Add Recipe</button>
-            </form>
+          <button class="close-btn" id="close-popup-btn">X</button>
+          <h2>Add Recipe</h2>
+          <form>
+            <input type="text" placeholder="Recipe name" required />
+            <input type="text" placeholder="Description" required />
+            <textarea placeholder="Ingredients" required></textarea>
+            <textarea placeholder="Instructions" required></textarea>
+            <button type="submit">Add Recipe</button>
+          </form>
         </div>
-    </div>
+      </div>
 
-    <aside id="filter-menu">
+      <aside id="filter-menu">
         <h2>Filter Recipes</h2>
         <form>
-            <select>
-                <option value="">Select category</option>
-                <option value="breakfast">Breakfast</option>
-                <option value="lunch">Lunch</option>
-                <option value="dinner">Dinner</option>
-            </select>
-            <button type="submit">Filter</button>
+          <select>
+            <option value="">Select category</option>
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+          </select>
+          <button type="submit">Filter</button>
         </form>
-    </aside>
-</body>
+      </aside>
+    </section>
+  </body>
 </html>

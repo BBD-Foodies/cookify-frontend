@@ -1,0 +1,1 @@
+const LOGIN_URL = 'http://localhost:5500/';

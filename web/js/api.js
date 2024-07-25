@@ -26,7 +26,7 @@ const sample = {
   ],
 };
 
-const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRyaXN0YW5waGlwcyIsImlhdCI6MTcyMTkxMjY2OSwiZXhwIjoxNzIxOTE2MjY5fQ.nLMSjeN2Ox8yQbcAx1wljUknx4V78-xH6kj38nNWuDY';
+const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRyaXN0YW5waGlwcyIsImlhdCI6MTcyMTkzNzM3MiwiZXhwIjoxNzIxOTQwOTcyfQ.2FOYK9mMxVLCIEo6vd3B4PqacMOW0KPFUU_2RdFF2BQ';
 
 const fetchFromApi = async (path, reqOptions) => {
   const requestUrl = `${API_URL}${path}`;
@@ -40,13 +40,13 @@ const fetchFromApi = async (path, reqOptions) => {
   };
 
   try {
-      const response = await fetch(requestUrl, options);
-      body = await response.json();
+    const response = await fetch(requestUrl, options);
+    body = await response.json();
   } catch (error) {
-      console.error(error);
+    console.error(error);
   }
 
   return body;
 };
 
-export {fetchFromApi};
+export { fetchFromApi };
