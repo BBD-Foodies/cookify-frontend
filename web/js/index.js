@@ -1,4 +1,5 @@
 import { fetchFromApi } from "./api.js"
+import { initiateGitHubLogin, handleCallback } from './github-auth.js';
 
 const RECIPE_LIST_ID = 'view-recipes';
 const SINGLE_RECIPE_ID = 'single-recipe';
@@ -6,8 +7,13 @@ const SINGLE_RECIPE_ID = 'single-recipe';
 // ==================== INIT ====================
 const init = async () => {
     addEventListenersBob();
+    await checkAuthStatus();
 
-    await loadMainPage();
+    if (window.location.pathname === '/callback') {
+        handleCallback();
+    } else {
+        await loadMainPage();
+    }
 }
 
 document.addEventListener('DOMContentLoaded', init);
@@ -33,6 +39,49 @@ const addEventListenersBob = () => {
     document.getElementById('search-btn').addEventListener('click', function () {
         test();
     });
+}
+
+async function checkAuthStatus() {
+    const accessToken = sessionStorage.getItem('accessToken');
+    const authSection = document.getElementById('auth-section');
+
+    if (accessToken) {
+        try {
+            const response = await fetch('/api/auth/validate', {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+            if (response.ok) {
+                const userData = await response.json();
+                authSection.innerHTML = `
+                    <span>Welcome, ${userData.name}</span>
+                    <button id="logout-btn">Logout</button>
+                `;
+                document.getElementById('logout-btn').addEventListener('click', logout);
+            } else {
+                throw new Error('Invalid token');
+            }
+        } catch (error) {
+            console.error('Auth error:', error);
+            showLoginButton();
+        }
+    } else {
+        showLoginButton();
+    }
+}
+
+function showLoginButton() {
+    const authSection = document.getElementById('auth-section');
+    authSection.innerHTML = '<button id="github-login-btn">Login with GitHub</button>';
+    document.getElementById('github-login-btn').addEventListener('click', initiateGitHubLogin);
+}
+
+function logout() {
+    sessionStorage.removeItem('accessToken');
+    showLoginButton();
+    // Optionally, redirect to home page or refresh the current page
+    window.location.reload();
 }
 
 const loadMainPage = async () => {
