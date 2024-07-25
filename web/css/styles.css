@@ -28,22 +28,115 @@ body {
 }
 
 header {
+  background-color: #f2f2f2;
   display: flex;
-  flex-direction: row;
-  align-items: center;
   justify-content: center;
-  background-color: var(--yellow);
+  align-items: center;
+  padding: 0.5rem 0;
   width: 100%;
-  height: 4rem;
 }
 
-nav {
+.header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 80%;
+}
+
+header h1 {
+  margin: 0;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-container input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  margin-right: 0.5rem;
+}
+
+.search-container button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
   background-color: var(--teal);
-  padding: 1rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+nav {
+  background-color: #f2f2f2;
   width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+  box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.144);
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown .dropbtn {
+  background-color: var(--teal);
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #006666;
+}
+
+#filter-add button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  background-color: #fff;
+  color: var(--teal);
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+#filter-add button:hover {
+  background-color: #ccc;
 }
 
 nav input[type="text"] {
@@ -97,9 +190,12 @@ section {
   border: 1px solid var(--teal);
   border-radius: 0.5rem;
   padding: 1rem;
-  margin: 1rem;
+  margin: 0.6rem;
   background-color: var(--light-yellow);
   width: calc(100% - 2rem);
+  box-shadow: 0 0.2rem 0.2rem rgba(0, 0, 0, 0.1);
+  text-align: center;
+  cursor: pointer;
 }
 
 @media (min-width: 600px) {
@@ -214,12 +310,29 @@ textarea {
   width: 100%;
   height: 100%;
   padding: 1rem;
-  /* border: 0.12em solid rgba(107, 107, 107, 0.6);
-  border-radius: 0.5rem;
-  box-shadow: 0.1em 0.1em 2em 0.1em rgb(173, 173, 173); */
   gap: 1rem;
 }
 
 #single-recipe h1 {
   font-size: 2rem;
+}
+
+.recipe-card-text {
+  background: rgba(0, 0, 0, 0.171);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.recipe-name-text {
+  margin: 0;
+  font-weight: bold;
+  font-size: 1.5em;
+  color: #fff;
+}
+
+.recipe-desc-text {
+  margin: 0;
+  font-size: 1em;
+  color: #fff;
 }
