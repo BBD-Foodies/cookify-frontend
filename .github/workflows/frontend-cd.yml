@@ -1,0 +1,40 @@
+name: Frontend CD
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  web-cd:
+    name: Website CD
+    runs-on: ubuntu-latest
+
+    env:
+      web_directory: ./web
+      web_bucket_name: cookify-web-bucket
+      web_config_param: /cookify/config
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Assume the deploy pipeline user role
+        uses: aws-actions/configure-aws-credentials@v4.0.1
+        with:
+          role-to-assume: ${{secrets.AWS_SECRET_ASSUME_ROLE}}
+          role-session-name: federatedOIDC-GH-AWS
+          aws-region: ${{secrets.AWS_SECRET_REGION}}
+
+      - name: Inject config file
+        working-directory: ${{ env.web_directory }}
+        run: |
+          aws ssm get-parameter --name "${{ env.web_config_param }}" --with-decryption --query 'Parameter.Value' --region ${{secrets.AWS_SECRET_REGION}} --output text > ./js/config.js
+
+      - name: Deploy Fronted Files
+        working-directory: ${{ env.web_directory }}
+        run: aws s3 cp . s3://${{ env.web_bucket_name }}/ --recursive
