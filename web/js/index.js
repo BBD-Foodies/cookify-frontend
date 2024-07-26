@@ -8,7 +8,10 @@ const MAX_PAGES = 1;
 
 // ==================== INIT ====================
 const init = async () => {
-    if (window.location.pathname === '/login') {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+
+    if (code) {
         handleCallback();
     }
 
@@ -32,6 +35,11 @@ const addEventListenersBob = () => {
     document.getElementById('search-btn').addEventListener('click', function () {
         test();
     });
+
+    document.getElementById('title-text').addEventListener("click", function () {
+
+        window.location.href = '/';
+    })
 }
 
 async function checkAuthStatus() {
@@ -47,7 +55,7 @@ async function checkAuthStatus() {
             });
             if (response.ok) {
                 const userData = await response.json();
-                console.log(userData);
+                sessionStorage.setItem('userName', userData.user.userName);
             } else {
                 throw new Error('Invalid token');
             }
