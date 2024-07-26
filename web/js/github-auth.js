@@ -12,11 +12,13 @@ export async function handleCallback(code) {
         let tokenRes;
         try {
             tokenRes = await fetch(url);
+
         } catch (error) {
             console.error(error);
         }
-        alert(JSON.stringify(tokenRes));
-        const token = (await tokenRes.json()).accessToken;
+        const tokenBody = (await tokenRes.json());
+        console.log(tokenBody);
+        const token = tokenBody.accessToken;
 
         if (token) {
             sessionStorage.setItem('accessToken', token);
