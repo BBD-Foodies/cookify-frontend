@@ -4,7 +4,7 @@ import { initiateGitHubLogin, handleCallback } from './github-auth.js';
 const RECIPE_LIST_ID = 'view-recipes';
 const SINGLE_RECIPE_ID = 'single-recipe';
 
-const MAX_PAGES = 1;
+let MAX_PAGES = 1;
 
 // ==================== INIT ====================
 const init = async () => {
@@ -34,14 +34,33 @@ const addEventListenersBob = () => {
         document.getElementById('add-recipe-popup').style.display = 'flex';
     });
 
-    document.getElementById('search-btn').addEventListener('click', function () {
-        test();
-    });
-
     document.getElementById('title-text').addEventListener("click", function () {
 
         window.location.href = '/';
-    })
+    });
+
+    document.getElementById('search-btn').addEventListener('click', searchForRecipes);
+
+    document.querySelectorAll('#mealTypes a').forEach(function(element) {
+        element.addEventListener('click', function(event) {
+          event.preventDefault(); // Prevent the default link behavior
+          const selectedValue = this.getAttribute('data-value');
+          console.log('Selected value:', selectedValue);
+          handleFilter(selectedValue);
+        });
+      });
+
+
+    document.getElementById('itemsPerPage').addEventListener('change', async function() {
+        const itemsPerPage = this.value;
+        console.log('Items per page:', itemsPerPage);
+        MAX_PAGES = Number(itemsPerPage / 10);
+        const viewRecipesElement = document.getElementById('view-recipes');
+        while (viewRecipesElement.firstChild) {
+            viewRecipesElement.removeChild(viewRecipesElement.firstChild);
+        }
+        await loadMainPage();
+      });
 }
 
 async function checkAuthStatus() {
@@ -92,7 +111,7 @@ const loadMainPage = async () => {
     data.push(...res.data);
 
     let pageCnt = 2;
-    while (hasNext == true && pageCnt < MAX_PAGES - 1) {
+    while (hasNext == true && pageCnt -1 < MAX_PAGES) {
         const next = await fetchFromApi(`api/recipes?currentPage=${pageCnt++}`, {});
         data.push(...next.data);
         hasNext = next.hasNext;
@@ -215,4 +234,53 @@ async function renderRecipe(recipe) {
     });
     steps.appendChild(stepsList);
     recipeContainer.appendChild(steps);
+}
+
+const searchForRecipes = async () => {
+    const keyword = document.getElementById('searchinput').value;
+
+    if (!keyword || keyword.length <= 0 || keyword.length > 20) {return;}
+    const viewRecipesElement = document.getElementById('view-recipes');
+    while (viewRecipesElement.firstChild) {
+        viewRecipesElement.removeChild(viewRecipesElement.firstChild);
+    }
+
+
+    const res = await fetchFromApi(`api/recipes/search?q=${keyword}`, {});
+    let hasNext = res.hasNext;
+    let data = [];
+    data.push(...res.data);
+
+    let pageCnt = 2;
+    while (hasNext == true && pageCnt < MAX_PAGES - 1) {
+        const next = await fetchFromApi(`api/recipes?currentPage=${pageCnt++}`, {});
+        data.push(...next.data);
+        hasNext = next.hasNext;
+    }
+
+    data.forEach((el) => buildRecipeCard(RECIPE_LIST_ID, el.RecipeName, el.MealType, el._id));
+}
+
+
+const handleFilter = async (keyword) => {
+
+    if (!keyword || keyword.length <= 0 || keyword.length > 20) {return;}
+    const viewRecipesElement = document.getElementById('view-recipes');
+    while (viewRecipesElement.firstChild) {
+        viewRecipesElement.removeChild(viewRecipesElement.firstChild);
+    }
+
+    const res = await fetchFromApi(`api/recipes?MealType=${keyword}`, {});
+    let hasNext = res.hasNext;
+    let data = [];
+    data.push(...res.data);
+
+    let pageCnt = 2;
+    while (hasNext == true && pageCnt < MAX_PAGES - 1) {
+        const next = await fetchFromApi(`api/recipes?currentPage=${pageCnt++}`, {});
+        data.push(...next.data);
+        hasNext = next.hasNext;
+    }
+
+    data.forEach((el) => buildRecipeCard(RECIPE_LIST_ID, el.RecipeName, el.MealType, el._id));
 }

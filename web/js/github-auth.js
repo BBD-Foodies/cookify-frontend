@@ -6,7 +6,6 @@ export function initiateGitHubLogin() {
 }
 
 export async function handleCallback(code) {
-    alert(code);
     if (code) {
         const url = `https://api.cookify.projects.bbdgrad.com/api/auth/login?code=${code}`;
         let tokenRes;
@@ -22,7 +21,6 @@ export async function handleCallback(code) {
 
         if (token) {
             sessionStorage.setItem('accessToken', token);
-            alert(token);
             window.location.href = '/';
         }
     }

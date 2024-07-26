@@ -14,7 +14,7 @@
           <div class="header-container">
         <h1 id="title-text">Cookify</h1>
         <div class="search-container">
-          <input type="text" placeholder="Search recipes" />
+          <input type="text" placeholder="Search recipes" id="searchinput"/>
           <button id="search-btn">Search</button>
         </div>
       </div>
@@ -22,21 +22,25 @@
     <nav>
       <div class="nav-container">
         <div class="dropdown">
-          <button class="dropbtn">Categories</button>
-          <div class="dropdown-content">
-            <a href="#">Category 1</a>
-            <a href="#">Category 2</a>
-            <a href="#">Category 3</a>
-          </div>
-        </div>
-        <div class="dropdown">
           <button class="dropbtn">Meal Types</button>
-          <div class="dropdown-content">
-            <a href="#">Breakfast</a>
-            <a href="#">Lunch</a>
-            <a href="#">Dinner</a>
+          <div class="dropdown-content" id="mealTypes">
+            <a href="#" data-value="Breakfast">Breakfast</a>
+            <a href="#" data-value="Lunch">Lunch</a>
+            <a href="#"  data-value="Dinner">Dinner</a>
+            <a href="#"  data-value="Snack">Snack</a>
+            <a href="#"  data-value="Beverage">Beverage</a>
           </div>
         </div>
+
+    <div class="items-per-page-dropdown">
+      <label for="itemsPerPage">Items per page:</label>
+      <select id="itemsPerPage">
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+      </select>
+    </div>
         <div id="filter-add">
           <button id="add-recipe-btn">Add Recipe</button>
         </div>
