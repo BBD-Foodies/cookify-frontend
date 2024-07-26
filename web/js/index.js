@@ -23,7 +23,6 @@ const init = async () => {
     await loadMainPage();
 }
 
-// document.getElementById('testButton').addEventListener('click', init);
 document.addEventListener('DOMContentLoaded', init);
 
 // ==============================================
@@ -68,7 +67,14 @@ async function checkAuthStatus() {
             initiateGitHubLogin();
         }
     } else {
-        initiateGitHubLogin();
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        if (code) {
+            handleCallback(code);
+        } else {
+            
+            initiateGitHubLogin();
+        }
     }
 }
 
