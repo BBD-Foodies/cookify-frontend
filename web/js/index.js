@@ -8,14 +8,14 @@ const MAX_PAGES = 1;
 
 // ==================== INIT ====================
 const init = async () => {
+    await checkAuthStatus();
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
 
     if (code) {
-        handleCallback();
+        handleCallback(code);
     }
 
-    await checkAuthStatus();
 
     addEventListenersBob();
     await loadMainPage();
@@ -43,7 +43,10 @@ const addEventListenersBob = () => {
 }
 
 async function checkAuthStatus() {
-    const accessToken = sessionStorage.getItem('accessToken');
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const accessToken = hashParams.get('accessToken');
+    // const accessToken = sessionStorage.getItem('accessToken');
+    console.log(accessToken);
 
     if (accessToken) {
         try {
