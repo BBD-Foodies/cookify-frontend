@@ -5,19 +5,24 @@ export function initiateGitHubLogin() {
     window.location.href = githubAuthUrl;
 }
 
-export async function handleCallback() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    console.log(code);
-
+export async function handleCallback(code) {
+    alert(code);
     if (code) {
         const url = `https://api.cookify.projects.bbdgrad.com/api/auth/login?code=${code}`;
-        const tokenRes = await fetch(url);
-        console.log(tokenRes);
-        const token = (await tokenRes.json()).accessToken;
+        let tokenRes;
+        try {
+            tokenRes = await fetch(url);
+
+        } catch (error) {
+            console.error(error);
+        }
+        const tokenBody = (await tokenRes.json());
+        console.log(tokenBody);
+        const token = tokenBody.accessToken;
 
         if (token) {
             sessionStorage.setItem('accessToken', token);
+            alert(token);
             window.location.href = '/';
         }
     }

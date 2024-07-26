@@ -8,19 +8,22 @@ const MAX_PAGES = 1;
 
 // ==================== INIT ====================
 const init = async () => {
+    await checkAuthStatus();
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
 
+    console.log(code);
+
     if (code) {
-        handleCallback();
+        await handleCallback(code);
     }
 
-    await checkAuthStatus();
 
     addEventListenersBob();
     await loadMainPage();
 }
 
+// document.getElementById('testButton').addEventListener('click', init);
 document.addEventListener('DOMContentLoaded', init);
 
 // ==============================================
@@ -44,6 +47,7 @@ const addEventListenersBob = () => {
 
 async function checkAuthStatus() {
     const accessToken = sessionStorage.getItem('accessToken');
+    console.log(accessToken);
 
     if (accessToken) {
         try {
@@ -96,8 +100,8 @@ const buildRecipeCard = async (recListId, name, description, recipeId) => {
     recipeCard.className = "recipe-card";
     recipeCard.id = recipeId;
 
-    // const iconUrl = await fetchFromApi(`api/recipes/icon?q=${name}`, {});
-    const iconUrl = 'https://media.gettyimages.com/id/1141797008/vector/table-knife-and-fork-vector.jpg?s=612x612&w=0&k=20&c=ZMscIoKfUiQevWFrxxwnhwZ-MvElVU8XFvmzSfZzolk=';
+    const iconUrl = await fetchFromApi(`api/recipes/icon?q=${name}`, {});
+    // const iconUrl = 'https://media.gettyimages.com/id/1141797008/vector/table-knife-and-fork-vector.jpg?s=612x612&w=0&k=20&c=ZMscIoKfUiQevWFrxxwnhwZ-MvElVU8XFvmzSfZzolk=';
 
     recipeCard.style.backgroundImage = `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3)), url(${iconUrl})`;
     recipeCard.style.backgroundSize = 'cover';
